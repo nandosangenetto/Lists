@@ -6,27 +6,28 @@ var resultLimit;
 $(document).ready(function(){
   $('#submit').click(function(e){
     e.preventDefault();
-    if($('#event-link').val() != "" &&$('#number-of-results').val() != ""){
+    if(($('#event-link').val() != "" && $('#number-of-results').val() != "") && ($('input[name=attending]').is(':checked') || $('input[name=interested]').is(':checked')) ){
       evento = $('#event-link').val();
       eventoId = evento.replace(/[^0-9]/g,'');
       resultLimit = $('#number-of-results').val();
-      $('#callAPI').empty();
+      $('#list-of-attending, #list-of-interesteds, .attending, .interested').empty();
       getEventName();
+
       if($('input[name=attending]').is(':checked')){
         $('.container-of-results, .attending').show();
         getAttendingNames();
+        if($('input[name=interested]').is(':checked')){
+          $('.container-of-results, .interested').show();
+          getInterestedNames();
+        }      
       }
-      if($('input[name=interested]').is(':checked')){
-        $('.container-of-results, .interested').show();
-        getInterestedNames();
-      }      
     } else {
-      $('.error-message').toggle(function(){
-        $(this).css({
-          top: 0
-        });
-      });
-       
+      if($('.error-message').is(':hidden')){
+        $('.error-message').slideDown('slow');
+        setTimeout(function(){
+          $('.error-message').slideUp();
+        }, 4000);
+      }
     }
   });
 });
@@ -110,10 +111,11 @@ $(document).ready(function(){
 
   function getInterestedNames(){
     FB.api('/'+eventoId+'/interested?limit='+resultLimit, function(response) {
+        console.log(response);
+        $('.interested-container').append('<div id="list-of-interesteds"></div>');
+        $('.interested').append('<strong style="color:green;">' + response.data.length + '</strong>' + ' PESSOAS INTERESSADAS');
         function percorreArray(element, index, array){
-            console.log(element);
-            $('#list-of-interesteds').append("<span>" + element.name + "</span>");
-            console.log(element.name.charAt(0));
+            $('#list-of-interesteds').append("<a href=https://www.facebook.com/"+ element.id +"><span>" + element.name + "</span></a><br/>");
         }
         var sorting = response.data.sort(function(a,b){
             var nameA = a.name.toUpperCase();
@@ -126,10 +128,11 @@ $(document).ready(function(){
 
   function getAttendingNames() {
     FB.api('/'+eventoId+'/attending?limit='+resultLimit, function(response) {
+      console.log(response);
+        $('.attending-container').append('<div id="list-of-attending"></div>');
+        $('.attending').append('<strong style="color:green;">' + response.data.length + '</strong>' + ' PESSOAS CONFIRMADAS');
         function percorreArray(element, index, array){
-            console.log(element);
-            $('#list-of-attending').append("<span>" + element.name + "</span>");
-            console.log(element.name.charAt(0));
+            $('#list-of-attending').append("<a href=https://www.facebook.com/"+ element.id +"><span>" + element.name + "</span></a><br/>");
         }
         var sorting = response.data.sort(function(a,b){
             var nameA = a.name.toUpperCase();

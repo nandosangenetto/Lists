@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
-    <div class="error-message">TODOS OS CAMPOS ABAIXO DEVEM SER PREENCHIDOS</div>
+    <div class="error-message"><strong>TODOS</strong> OS CAMPOS ABAIXO DEVEM SER PREENCHIDOS</div>
 
     <form>
         <input id="event-link" type="text" placeholder="Digite o link do evento" >
@@ -24,16 +24,19 @@
     </form>
 
     <fb:login-button scope="public_profile,email" data-auto-logout-link="true" onlogin="checkLoginState();"></fb:login-button>
+    
     <div class="container-of-results">
+
         <h1 class="event-name"></h1>
+
         <div class="attending-container">
-            <h1 class="attending">CONFIRMADOS</h1>
-            <div id="list-of-attending"></div>
+            <h1 class="attending"></h1>
         </div>
+
         <div class="interested-container">
-            <h1 class="interested">Interessados</h1>
-            <div id="list-of-interesteds"></div>
+            <h1 class="interested"></h1>
         </div>
+
     </div>
 
 </body>
