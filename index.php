@@ -15,26 +15,28 @@
         <input id="number-of-results" type="text" placeholder="Número de nomes desejados" >
         <span class="important-note">* Captura os primeiros nomes da lista e os organiza em ordem alfabética.</span>
         <div class="checkboxes">
-            <input type="checkbox" name="attending" value="attending" checked> 
+            <input type="checkbox" id="attending" name="attending" value="attending" checked> 
             <label for="attending">Confirmados</label>
-            <input type="checkbox" name="interested" value="interested">
+            <input type="checkbox" id="interested" name="interested" value="interested">
             <label for="interested">Interessados</label>
         </div>
         <button id="submit">Enviar</button>
     </form>
 
     <fb:login-button scope="public_profile,email" data-auto-logout-link="true" onlogin="checkLoginState();"></fb:login-button>
-    
+
     <div class="container-of-results">
 
         <h1 class="event-name"></h1>
 
         <div class="attending-container">
-            <h1 class="attending"></h1>
+            <h1 class="title"><strong style="color:green;" class="confirmed">0</strong> PESSOAS CONFIRMADAS</h1>
+            <div class="result"></div>
         </div>
 
         <div class="interested-container">
-            <h1 class="interested"></h1>
+            <h1 class="title"><strong style="color:green;" class="confirmed">0</strong> PESSOAS INTERESSADAS</h1>
+            <div class="result"></div>
         </div>
 
     </div>

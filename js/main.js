@@ -3,6 +3,12 @@ var appId = 183431692064168;
 var evento;
 var eventoId;
 var resultLimit;
+
+var results = {
+  interested: [],
+  attending: []
+};
+
 $(document).ready(function(){
   $('#submit').click(function(e){
     e.preventDefault();
@@ -15,10 +21,10 @@ $(document).ready(function(){
 
       if($('input[name=attending]').is(':checked')){
         $('.container-of-results, .attending').show();
-        getAttendingNames();
+        getPeople('attending');
         if($('input[name=interested]').is(':checked')){
           $('.container-of-results, .interested').show();
-          getInterestedNames();
+          getPeople('interested');
         }      
       }
     } else {
@@ -35,15 +41,13 @@ $(document).ready(function(){
 
  // This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
-    console.log('statusChangeCallback');
-    console.log(response);
     // The response object is returned with a status field that lets the
     // app know the current login status of the person.
     // Full docs on the response object can be found in the documentation
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      getAttendingNames();
+      // getPeople('attending');
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
       document.getElementById('status').innerHTML = 'Please log ' +
@@ -109,41 +113,34 @@ $(document).ready(function(){
     });
   }
 
-  function getInterestedNames(){
-    FB.api('/'+eventoId+'/interested?limit='+resultLimit, function(response) {
-        console.log(response);
-        $('.interested-container').append('<div id="list-of-interesteds"></div>');
-        $('.interested').append('<strong style="color:green;">' + response.data.length + '</strong>' + ' PESSOAS INTERESSADAS');
-        function percorreArray(element, index, array){
-            $('#list-of-interesteds').append("<a href=https://www.facebook.com/"+ element.id +"><span>" + element.name + "</span></a><br/>");
-        }
-        var sorting = response.data.sort(function(a,b){
-            var nameA = a.name.toUpperCase();
-            var nameB = b.name.toUpperCase();
-            return (nameA < nameB) ? -1 : (nameA > nameB) ? 1 : 0;
+
+
+  function getPeople(type, page){
+    page = (typeof page !== 'undefined') ? '&after=' + page : '';
+    var url = '/'+eventoId+'/' + type + '?limit='+resultLimit + page;
+    FB.api(url, function(response) {
+
+        results[type] = results[type].concat(response.data).sort(sortNames); 
+
+        $('.' + type + '-container .people').remove();
+        results[type].forEach(function(element, index, array){
+            $('.' + type + '-container .result').append('<a href="https://www.facebook.com/' + element.id + '" class="people" target="_blank"><span>' + element.name + '</span></a>');
         });
-        sorting.forEach(percorreArray);
+
+        var numberOfPeople = $('.' + type + '-container .people').length;
+        $('.' + type + '-container .confirmed').html(numberOfPeople);
+
+        if(typeof response.paging !== 'undefined') {
+          getPeople(type, response.paging.cursors.after);
+        } else {
+          results[type] = null;
+        }
+
     });
   }
 
-  function getAttendingNames() {
-    FB.api('/'+eventoId+'/attending?limit='+resultLimit, function(response) {
-      console.log(response);
-        $('.attending-container').append('<div id="list-of-attending"></div>');
-        $('.attending').append('<strong style="color:green;">' + response.data.length + '</strong>' + ' PESSOAS CONFIRMADAS');
-        function percorreArray(element, index, array){
-            $('#list-of-attending').append("<a href=https://www.facebook.com/"+ element.id +"><span>" + element.name + "</span></a><br/>");
-        }
-        var sorting = response.data.sort(function(a,b){
-            var nameA = a.name.toUpperCase();
-            var nameB = b.name.toUpperCase();
-            return (nameA < nameB) ? -1 : (nameA > nameB) ? 1 : 0;
-        });
-        sorting.forEach(percorreArray);
-    });
+  function sortNames(a,b){
+      var nameA = a.name.toUpperCase();
+      var nameB = b.name.toUpperCase();
+      return (nameA < nameB) ? -1 : (nameA > nameB) ? 1 : 0;
   }
-/*
-  Below we include the Login Button social plugin. This button uses
-  the JavaScript SDK to present a graphical Login button that triggers
-  the FB.login() function when clicked.
-*/

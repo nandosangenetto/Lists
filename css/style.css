@@ -18,7 +18,7 @@ body{
     font-size: 20px;
     font-family: Verdana;
 }
-#list-of-attending, #list-of-interesteds{
+.result{
     margin-bottom: 20px;
     padding: 0 15px;
     -webkit-column-count: 6;
