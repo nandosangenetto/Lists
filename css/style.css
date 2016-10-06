@@ -1,4 +1,24 @@
-#callAPI{
+html{
+    height: 100vh;
+    background-color: azure;
+}
+body{
+	margin: 0;
+}
+.error-message{
+	position: fixed;
+	
+	top: -10%;
+    height: 30px;
+    padding: 10px 0;
+    width: 100vw;
+    text-align: center;
+    color: white;
+    background-color: red;
+    font-size: 20px;
+    font-family: Verdana;
+}
+#list-of-attending, #list-of-interesteds{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -9,6 +29,41 @@
 span{
     width: 15%;
 }
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    margin-top: 60px;
+}
+input[type='text'] {
+	width: 25%;
+	padding: 20px 5px;
+	font-size: 20px;
+	margin: 15px 0;
+}
+input[type='checkbox'] {
+	padding: 20px 5px;
+	font-size: 20px;
+}
+button{
+	background-color: cornflowerblue;
+    border: none;
+    margin: 15px 0 0;
+    padding: 20px 5px;
+    width: 25%;
+    font-size: 20px;
+    color: white;
+}
+.fb_iframe_widget{
+	position: absolute!important;
+	top: 10px;
+	left: 10px;
+}
 h1{
     text-align: center;
+}
+.container-of-results, .attending, .interested{
+	display: none;
 }

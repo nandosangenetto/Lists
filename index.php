@@ -1,20 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Facebook Login JavaScript Example</title>
-  <meta charset="UTF-8">
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script type="text/javascript" src="js/main.js" ></script>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title>Facebook Login JavaScript Example</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="js/main.js" ></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
-  <div id="fb-root"></div>
-  <!-- <div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="true" data-auto-logout-link="true"></div> -->
-  <fb:login-button scope="public_profile,email" data-auto-logout-link="true" onlogin="checkLoginState();"></fb:login-button>
+    <div class="error-message">TODOS OS CAMPOS ABAIXO DEVEM SER PREENCHIDOS</div>
 
-  <div id="status"></div>
-  <h1>CONFIRMADOS</h1>
-  <div id="callAPI"></div>
+    <form>
+        <input id="event-link" type="text" placeholder="Digite o link do evento" >
+        <input id="number-of-results" type="text" placeholder="Número de nomes desejados" >
+        <span class="important-note">* Captura os primeiros nomes da lista e os organiza em ordem alfabética.</span>
+        <div class="checkboxes">
+            <input type="checkbox" name="attending" value="attending" checked> 
+            <label for="attending">Confirmados</label>
+            <input type="checkbox" name="interested" value="interested">
+            <label for="interested">Interessados</label>
+        </div>
+        <button id="submit">Enviar</button>
+    </form>
+
+    <fb:login-button scope="public_profile,email" data-auto-logout-link="true" onlogin="checkLoginState();"></fb:login-button>
+    <div class="container-of-results">
+        <h1 class="event-name"></h1>
+        <div class="attending-container">
+            <h1 class="attending">CONFIRMADOS</h1>
+            <div id="list-of-attending"></div>
+        </div>
+        <div class="interested-container">
+            <h1 class="interested">Interessados</h1>
+            <div id="list-of-interesteds"></div>
+        </div>
+    </div>
 
 </body>
 </html>

@@ -1,7 +1,37 @@
-// $(document).on(ready, function(){
-//  $('body').css('background-color':'red');
-  
-// }); 
+//GLOBAL VARIABLES
+var appId = 183431692064168;
+var evento;
+var eventoId;
+var resultLimit;
+$(document).ready(function(){
+  $('#submit').click(function(e){
+    e.preventDefault();
+    if($('#event-link').val() != "" &&$('#number-of-results').val() != ""){
+      evento = $('#event-link').val();
+      eventoId = evento.replace(/[^0-9]/g,'');
+      resultLimit = $('#number-of-results').val();
+      $('#callAPI').empty();
+      getEventName();
+      if($('input[name=attending]').is(':checked')){
+        $('.container-of-results, .attending').show();
+        getAttendingNames();
+      }
+      if($('input[name=interested]').is(':checked')){
+        $('.container-of-results, .interested').show();
+        getInterestedNames();
+      }      
+    } else {
+      $('.error-message').toggle(function(){
+        $(this).css({
+          top: 0
+        });
+      });
+       
+    }
+  });
+});
+
+
  // This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
     console.log('statusChangeCallback');
@@ -12,7 +42,7 @@
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      testAPI();
+      getAttendingNames();
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
       document.getElementById('status').innerHTML = 'Please log ' +
@@ -36,7 +66,7 @@
 
   window.fbAsyncInit = function() {
   FB.init({
-    appId      : '183431692064168',
+    appId      : appId,
     cookie     : true,  // enable cookies to allow the server to access 
                         // the session
     xfbml      : true,  // parse social plugins on this page
@@ -72,18 +102,17 @@
 
   // Here we run a very simple test of the Graph API after login is
   // successful.  See statusChangeCallback() for when this call is made.
-  function testAPI() {
-    FB.api('/me', function(response) {
-      // alert('Thanks for logging in, ' + response.name + '!');
-      // console.log('Successful login for: ' + response.name);
-      // document.getElementById('status').innerHTML =
-      //'Thanks for logging in, ' + response.name + '!';
+  function getEventName(){
+    FB.api('/'+eventoId, function(response){
+      $('.event-name').html(response.name);
     });
-    FB.api('/1038390706278149/attending?limit=30', 'get', {fields: 'attending, name'}, function(response) {
+  }
+
+  function getInterestedNames(){
+    FB.api('/'+eventoId+'/interested?limit='+resultLimit, function(response) {
         function percorreArray(element, index, array){
             console.log(element);
-            document.createElement(element.name.charAt(0));
-            document.getElementById('callAPI').innerHTML += "<span>" + element.name + "</span>";
+            $('#list-of-interesteds').append("<span>" + element.name + "</span>");
             console.log(element.name.charAt(0));
         }
         var sorting = response.data.sort(function(a,b){
@@ -92,7 +121,22 @@
             return (nameA < nameB) ? -1 : (nameA > nameB) ? 1 : 0;
         });
         sorting.forEach(percorreArray);
-        document.getElementById('callAPI').firstChild == response.data.name.charAt(0);
+    });
+  }
+
+  function getAttendingNames() {
+    FB.api('/'+eventoId+'/attending?limit='+resultLimit, function(response) {
+        function percorreArray(element, index, array){
+            console.log(element);
+            $('#list-of-attending').append("<span>" + element.name + "</span>");
+            console.log(element.name.charAt(0));
+        }
+        var sorting = response.data.sort(function(a,b){
+            var nameA = a.name.toUpperCase();
+            var nameB = b.name.toUpperCase();
+            return (nameA < nameB) ? -1 : (nameA > nameB) ? 1 : 0;
+        });
+        sorting.forEach(percorreArray);
     });
   }
 /*
